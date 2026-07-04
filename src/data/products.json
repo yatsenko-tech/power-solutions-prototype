@@ -1,0 +1,158 @@
+[
+  {
+    "id": "usv-home-800",
+    "name": "PowerFort Home 800 Eco",
+    "category": "usv",
+    "categoryLabel": "USV für Home-Office & PC",
+    "price": "149",
+    "power": "800VA (480W)",
+    "waveType": "Simulierte Sinuswelle",
+    "batteryType": "Integrierte AGM-Batterie 12V / 9Ah",
+    "description": "Zuverlässige und kompakte unterbrechungsfreie Stromversorgung (USV) für Heim-PCs, Router, POS-Systeme und Telefonanlagen. Schützt vor Spannungsspitzen und bietet bis zu 20 Minuten Überbrückungszeit.",
+    "specs": {
+      "Leistung": "800 VA / 480 Watt",
+      "Ausgangsspannungsform": "Simulierte (approximierte) Sinuswelle",
+      "Eingangsspannungsbereich": "162 - 290 V",
+      "Umschaltzeit": "2-6 ms",
+      "Ausgänge (Schuko)": "2 x Schuko mit Erdung"
+    },
+    "features": [
+      "Kaltstartfunktion (Cold Start) direkt aus dem Akku",
+      "Intelligentes Batteriemanagement (ABM) zur Lebensdauerverlängerung",
+      "Integrierter Schutz vor Kurzschluss und Überlastung",
+      "Geräuschloser Betrieb bei normaler Last"
+    ],
+    "inStock": true,
+    "image": "/products/Home_800_Eco.png"
+  },
+  {
+    "id": "usv-boiler-pure-1000",
+    "name": "PowerFort EcoSolar 1000 Sine",
+    "category": "usv",
+    "categoryLabel": "USV für Heizungen & Pumpen",
+    "price": "329",
+    "power": "1000VA (700W)",
+    "waveType": "Reine Sinuswelle (Pure Sine Wave)",
+    "batteryType": "Externer Batterieanschluss (12V)",
+    "description": "Spezialisierte USV mit reiner Sinuswelle, entwickelt für Heizkessel, Umwälzpumpen und andere empfindliche Elektronik. Erfordert den Anschluss eines externen 12V-Stromspeichers.",
+    "specs": {
+      "Leistung": "1000 VA / 700 Watt",
+      "Ausgangsspannungsform": "Reine Sinuswelle (THD < 3%)",
+      "Ladestrom für externe Batterie": "Regelbar, 5A / 10A / 15A",
+      "Kompatible Batteriespannung": "12 V",
+      "Anzeige": "Farbiges LCD-Display"
+    },
+    "features": [
+      "Reine Sinuswelle – perfekt geeignet für hochempfindliche Heizungspumpen",
+      "Automatische Spannungsregulierung (AVR) im Bereich von 140 bis 275 V",
+      "Kompatibel mit allen gängigen Batterietypen (AGM, Gel, LiFePO4)",
+      "Vollautomatischer Betrieb mit intelligentem Ladeprozess"
+    ],
+    "inStock": true,
+    "image": "/products/EcoSolar_1000_Sine.png"
+  },
+  {
+    "id": "usv-rack-3000",
+    "name": "PowerFort ProRT 3000 Online",
+    "category": "usv",
+    "categoryLabel": "Professionelle USV (On-Line)",
+    "price": "899",
+    "power": "3000VA (2700W)",
+    "waveType": "Doppelwandler-Technologie (On-Line)",
+    "batteryType": "Interne Batterien (6 x 12V 9Ah) + externer Anschluss",
+    "description": "Professionelle On-Line-USV mit doppelter Konvertierung und absolut null Umschaltzeit. Entwickelt für Server-Racks, medizinische Geräte und kritische IT-Infrastrukturen.",
+    "specs": {
+      "Leistung": "3000 VA / 2700 Watt",
+      "Technologie": "On-Line (Doppelwandler)",
+      "Umschaltzeit": "0 ms (Unterbrechungsfrei)",
+      "Formfaktor": "Rack / Tower (2U)",
+      "Schnittstellen": "USB, RS232, SNMP-Steckplatz"
+    },
+    "features": [
+      "Absolut unterbrechungsfreie Stromversorgung (0 ms Umschaltzeit)",
+      "Hoher Leistungsfaktor (Power Factor PF = 0,9)",
+      "Aktive Kühlung mit temperaturgesteuertem Lüfter",
+      "Hot-Swappable (Batteriewechsel im laufenden Betrieb)"
+    ],
+    "inStock": true,
+    "image": "/products/ProRT_3000_Online.png"
+  },
+  {
+    "id": "bat-agm-100",
+    "name": "PowerFort SolarAGM 12-100",
+    "category": "battery",
+    "categoryLabel": "AGM-Batterien",
+    "price": "199",
+    "power": "12V 100Ah",
+    "waveType": "Verschlossene Bleibatterie (VRLA)",
+    "batteryType": "AGM (Absorbent Glass Mat)",
+    "description": "Zyklenfeste, wartungsfreie AGM-Batterie für anspruchsvolle Solaranlagen, USV-Systeme und Notstromversorgungen. Auslaufsicher und vibrationsbeständig für maximale Zuverlässigkeit.",
+    "specs": {
+      "Nennspannung": "12 V",
+      "Kapazität": "100 Ah (C20)",
+      "Anschlüsse": "M8 Schraubanschluss",
+      "Lebensdauer (Buffer-Mode)": "Bis zu 10-12 Jahre",
+      "Abmessungen (LxBxH)": "330 x 171 x 214 mm"
+    },
+    "features": [
+      "Optimiert für tiefe Entladungen (Deep Cycle)",
+      "Sehr geringe Selbstentladung (unter 3% pro Monat)",
+      "Vollständig versiegelte Konstruktion – sicher für Wohnräume",
+      "Hervorragend geeignet für USV-Heizungssysteme im Dauerbetrieb"
+    ],
+    "inStock": true,
+    "image": "/products/SolarAGM_12-100.png"
+  },
+  {
+    "id": "bat-lifepo4-100",
+    "name": "PowerFort LFP 12-100 Smart",
+    "category": "battery",
+    "categoryLabel": "LiFePO4-Akkumulatoren",
+    "price": "449",
+    "power": "12.8V 100Ah",
+    "waveType": "Lithium-Eisenphosphat mit BMS",
+    "batteryType": "LiFePO4 (LFP)",
+    "description": "Modernster Lithium-Eisenphosphat-Stromspeicher mit integriertem intelligenten Batterie-Management-System (BMS). Wiegt nur halb so viel wie eine AGM-Batterie und bietet über 4500 Ladezyklen.",
+    "specs": {
+      "Nennspannung": "12,8 V",
+      "Kapazität": "100 Ah (1280 Wh)",
+      "Lebensdauer (80% DoD)": ">= 4500 Zyklen",
+      "Schutzfunktionen (BMS)": "Überlast, Überhitzung, Tiefentladung, Kurzschluss",
+      "Gewicht": "11,5 kg (statt ca. 30 kg bei AGM)"
+    },
+    "features": [
+      "Ultraschnelle Ladung (vollständig geladen in ca. 2 Std. bei 50A Strom)",
+      "Integriertes BMS-System für höchste Sicherheitsstandards",
+      "Nahezu konstante Spannungslage über den gesamten Entladebereich",
+      "Umweltschonend und absolut frei von giftigen Schwermetallen"
+    ],
+    "inStock": true,
+    "image": "/products/LFP_12-100_Smart.png"
+  },
+  {
+    "id": "bat-gel-200",
+    "name": "PowerFort UltraGel 12-200",
+    "category": "battery",
+    "categoryLabel": "GEL-Batterien",
+    "price": "389",
+    "power": "12V 200Ah",
+    "waveType": "Gel-Elektrolyt Deep Cycle",
+    "batteryType": "GEL-Technologie",
+    "description": "Hochkapazitiver Gel-Stromspeicher für umfangreiche autonome Stromversorgungslösungen. Das gelierte Elektrolyt garantiert höchste Zyklenfestigkeit selbst bei häufigen und tiefen Entladungen.",
+    "specs": {
+      "Nennspannung": "12 V",
+      "Kapazität": "200 Ah",
+      "Arbeitstemperatur": "-20°C bis +55°C",
+      "Maximaler Entladestrom": "1600A (für 5 Sek.)",
+      "Abmessungen (LxBxH)": "522 x 240 x 218 mm"
+    },
+    "features": [
+      "Die erste Wahl für Anwendungen mit täglicher zyklischer Beanspruchung",
+      "Hervorragende Kapazitätserhaltung auch bei tiefen Temperaturen",
+      "Vollständig wartungsfrei, gasungsfrei und auslaufsicher",
+      "Konzipiert für langjährigen Einsatz in autarken PV- und USV-Systemen"
+    ],
+    "inStock": false,
+    "image": "/products/UltraGel_12-200.png"
+  }
+]
