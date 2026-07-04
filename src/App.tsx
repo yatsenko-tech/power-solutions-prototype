@@ -86,7 +86,7 @@ const ProductCard: React.FC<{ product: Product; onContact: (product: Product) =>
   </div>
 );
 
-const Home: React.FC<ContactFormProps> = ({ selectedProduct, setSelectedProduct }) => {
+const Home: React.FC<ContactFormProps> = ({ setSelectedProduct }) => {
   const handleContactClick = (product: Product) => {
     setSelectedProduct(product);
     // Scroll to contact form or navigate to a contact page
