@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import productsData from './data/products.json';
+import heroImage from './assets/hero.png';
 
 interface Product {
   id: string;
@@ -23,20 +24,43 @@ interface ContactFormProps {
   setSelectedProduct: (product: Product | null) => void;
 }
 
-const Header: React.FC = () => (
-  <header className="bg-primary text-white p-4 shadow-md">
-    <div className="container mx-auto flex justify-between items-center">
-      <Link to="/" className="text-2xl font-bold">PowerFort</Link>
-      <nav>
-        <ul className="flex space-x-4">
-          <li><Link to="/" className="hover:text-accent">Produkte</Link></li>
-          <li><Link to="/impressum" className="hover:text-accent">Impressum</Link></li>
-          <li><Link to="/datenschutz" className="hover:text-accent">Datenschutzerklärung</Link></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-);
+const Header: React.FC = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  return (
+    <header className="bg-primary text-white p-4 shadow-md">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link to="/" className="text-2xl font-bold flex items-center">
+          <img src={heroImage} alt="PowerFort Logo" className="h-8 mr-2 filter brightness-0 invert" />
+          PowerFort
+        </Link>
+        <nav className="hidden md:flex space-x-4">
+          <Link to="/" className="hover:text-accent">Produkte</Link>
+          <Link to="/impressum" className="hover:text-accent">Impressum</Link>
+          <Link to="/datenschutz" className="hover:text-accent">Datenschutzerklärung</Link>
+        </nav>
+        <div className="md:hidden flex items-center">
+          <button onClick={toggleMobileMenu} className="text-white focus:outline-none">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-gray-800 px-4 pt-2 pb-4 space-y-1 sm:px-3">
+          <Link to="/" className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-gray-700" onClick={toggleMobileMenu}>Produkte</Link>
+          <Link to="/impressum" className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-gray-700" onClick={toggleMobileMenu}>Impressum</Link>
+          <Link to="/datenschutz" className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-gray-700" onClick={toggleMobileMenu}>Datenschutzerklärung</Link>
+        </div>
+      )}
+    </header>
+  );
+};
 
 const Footer: React.FC = () => (
   <footer className="bg-slate-800 text-slate-300 p-8 mt-12">
@@ -111,6 +135,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSelectedP
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState(selectedProduct ? `Ich interessiere mich für das Produkt: ${selectedProduct.name}` : '');
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   React.useEffect(() => {
     if (selectedProduct) {
@@ -120,20 +145,42 @@ const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSelectedP
     }
   }, [selectedProduct]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!privacyAgreed) {
       alert('Bitte stimmen Sie der Datenschutzerklärung zu.');
       return;
     }
-    // Handle form submission logic here
-    console.log({ name, email, message, privacyAgreed });
-    alert('Vielen Dank für Ihre Anfrage! Wir werden uns in Kürze bei Ihnen melden.');
-    setName('');
-    setEmail('');
-    setMessage('');
-    setPrivacyAgreed(false);
-    setSelectedProduct(null);
+
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    formData.append("access_key", import.meta.env.VITE_WEB3FORMS_ACCESS_KEY);
+    formData.append("selectedProduct", selectedProduct ? selectedProduct.name : 'Keines (Allgemeine Anfrage)');
+
+    try {
+      const response = await fetch(import.meta.env.VITE_WEB3FORMS_API_URL, {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        alert("Success! Your message has been sent.");
+        setName('');
+        setEmail('');
+        setMessage('');
+        setPrivacyAgreed(false);
+        setSelectedProduct(null);
+      } else {
+        alert("Error: " + (data.message || "Failed to submit."));
+      }
+    } catch (error) {
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -146,10 +193,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSelectedP
           <input
             type="text"
             id="name"
+            name="name"
             className="shadow appearance-none border rounded w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:shadow-outline"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            disabled={isSubmitting}
           />
         </div>
         <div>
@@ -157,21 +206,25 @@ const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSelectedP
           <input
             type="email"
             id="email"
+            name="email"
             className="shadow appearance-none border rounded w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:shadow-outline"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={isSubmitting}
           />
         </div>
         <div>
           <label htmlFor="message" className="block text-slate-700 text-sm font-bold mb-2">Ihre Nachricht:</label>
           <textarea
             id="message"
+            name="message"
             rows={5}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:shadow-outline"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             required
+            disabled={isSubmitting}
           ></textarea>
         </div>
         <div className="flex items-center">
@@ -182,6 +235,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSelectedP
             checked={privacyAgreed}
             onChange={(e) => setPrivacyAgreed(e.target.checked)}
             required
+            disabled={isSubmitting}
           />
           <label htmlFor="privacyAgreed" className="text-sm text-slate-700">
             Ich stimme der <Link to="/datenschutz" className="text-primary hover:underline">Datenschutzerklärung</Link> zu.
@@ -189,9 +243,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSelectedP
         </div>
         <button
           type="submit"
-          className="bg-accent hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-300"
+          disabled={isSubmitting}
+          className={`text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 ${
+            isSubmitting ? 'bg-slate-400 cursor-not-allowed' : 'bg-accent hover:bg-orange-600'
+          }`}
         >
-          Anfrage senden
+          {isSubmitting ? 'Sending...' : 'Anfrage senden'}
         </button>
       </form>
     </section>
@@ -219,7 +276,7 @@ const Impressum: React.FC = () => (
     <p>Umsatzsteuer-Identifikationsnummer gemäß §27 a Umsatzsteuergesetz:</p>
     <p>DE123456789</p>
     <h2 className="text-2xl font-semibold text-slate-800 mt-8 mb-4">Haftung für Inhalte:</h2>
-    <p>Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.</p>
+    <p>Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG для eigenen Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.</p>
     <p>Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
     <h2 className="text-2xl font-semibold text-slate-800 mt-8 mb-4">Streitschlichtung:</h2>
     <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://ec.europa.eu/consumers/odr</a>.</p>
@@ -270,7 +327,7 @@ const Datenschutz: React.FC = () => (
 
     <h3 className="text-xl font-semibold text-slate-700 mt-4 mb-2">Auskunft, Sperrung, Löschung</h3>
     <p>Sie haben im Rahmen der geltenden gesetzlichen Bestimmungen jederzeit das Recht auf unentgeltliche Auskunft über Ihre gespeicherten personenbezogenen Daten, deren Herkunft und Empfänger und den Zweck der Datenverarbeitung und ggf. ein Recht auf Berichtigung, Sperrung oder Löschung dieser Daten.</p>
-    <p>Hierzu sowie zu weiteren Fragen zum Thema personenbezogene Daten können Sie sich jederzeit unter der im Impressum angegebenen Adresse an uns wenden.</p>
+    <p>Hierzu sowie zu weiteren Fragen zum Thema personenbezogene Daten können Sie sich jederzeit unter der im Impressum angegebenen Adresse an uns wenden. Des Weiteren steht Ihnen ein Beschwerderecht bei der zuständigen Aufsichtsbehörde zu.</p>
 
     <h3 className="text-xl font-semibold text-slate-700 mt-4 mb-2">Widerspruch gegen Werbe-E-Mails</h3>
     <p>Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit widersprochen. Die Betreiber der Seiten behalten sich ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-E-Mails, vor.</p>
