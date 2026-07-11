@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from './ProductCatalog';
+import { contactFormResources } from './ContactForm.resources';
 
 interface ContactFormProps {
   selectedProduct: Product | null;
@@ -10,13 +11,13 @@ interface ContactFormProps {
 export const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSelectedProduct }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState(selectedProduct ? `Я зацікавлений у продукті: ${selectedProduct.name}` : '');
+  const [message, setMessage] = useState(selectedProduct ? contactFormResources.interestInProduct(selectedProduct.name) : '');
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (selectedProduct) {
-      setMessage(`Я зацікавлений у продукті: ${selectedProduct.name}`);
+      setMessage(contactFormResources.interestInProduct(selectedProduct.name));
     } else {
       setMessage('');
     }
@@ -25,7 +26,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSe
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!privacyAgreed) {
-      alert('Будь ласка, погодьтеся з політикою конфіденційності.');
+      alert(contactFormResources.privacyValidationAlert);
       return;
     }
 
@@ -33,7 +34,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSe
 
     const formData = new FormData(e.currentTarget);
     formData.append("access_key", import.meta.env.VITE_WEB3FORMS_ACCESS_KEY);
-    formData.append("selectedProduct", selectedProduct ? selectedProduct.name : 'None (General Inquiry)');
+    formData.append("selectedProduct", selectedProduct ? selectedProduct.name : contactFormResources.defaultProductInquiry);
 
     try {
       const response = await fetch(import.meta.env.VITE_WEB3FORMS_API_URL, {
@@ -44,17 +45,17 @@ export const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSe
       const data = await response.json();
 
       if (response.ok && data.success) {
-        alert("Успішно! Ваше повідомлення було надіслано.");
+        alert(contactFormResources.submitSuccessAlert);
         setName('');
         setEmail('');
         setMessage('');
         setPrivacyAgreed(false);
         setSelectedProduct(null);
       } else {
-        alert("Помилка: " + (data.message || "Не вдалося надіслати."));
+        alert(contactFormResources.submitErrorAlert(data.message || contactFormResources.submitErrorDefault));
       }
     } catch (error) {
-      alert("Щось пішло не так. Будь ласка, спробуйте ще раз.");
+      alert(contactFormResources.generalErrorAlert);
     } finally {
       setIsSubmitting(false);
     }
@@ -62,11 +63,11 @@ export const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSe
 
   return (
     <section id="contact-form" className="container mx-auto p-8 bg-white shadow-lg rounded-lg mt-12 max-w-2xl">
-      <h2 className="text-3xl font-bold text-center text-primary mb-6">Запит на консультацію експерта</h2>
-      <p className="text-center text-slate-700 mb-8">Маєте запитання або бажаєте індивідуальну консультацію? Заповніть форму, і наша команда зв'яжеться з вами найближчим часом.</p>
+      <h2 className="text-3xl font-bold text-center text-primary mb-6">{contactFormResources.title}</h2>
+      <p className="text-center text-slate-700 mb-8">{contactFormResources.description}</p>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="name" className="block text-slate-700 text-sm font-bold mb-2">Ваше ім'я:</label>
+          <label htmlFor="name" className="block text-slate-700 text-sm font-bold mb-2">{contactFormResources.labelName}</label>
           <input
             type="text"
             id="name"
@@ -79,7 +80,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSe
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-slate-700 text-sm font-bold mb-2">Ваш E-mail:</label>
+          <label htmlFor="email" className="block text-slate-700 text-sm font-bold mb-2">{contactFormResources.labelEmail}</label>
           <input
             type="email"
             id="email"
@@ -92,7 +93,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSe
           />
         </div>
         <div>
-          <label htmlFor="message" className="block text-slate-700 text-sm font-bold mb-2">Ваше повідомлення:</label>
+          <label htmlFor="message" className="block text-slate-700 text-sm font-bold mb-2">{contactFormResources.labelMessage}</label>
           <textarea
             id="message"
             name="message"
@@ -115,7 +116,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSe
             disabled={isSubmitting}
           />
           <label htmlFor="privacyAgreed" className="text-sm text-slate-700">
-            Я погоджуюся з <Link to="/datenschutz" className="text-primary hover:underline">політикою конфіденційності</Link>.
+            {contactFormResources.privacyConsentTextBeforeLink}<Link to="/datenschutz" className="text-primary hover:underline">{contactFormResources.privacyConsentLinkText}</Link>{contactFormResources.privacyConsentTextAfterLink}
           </label>
         </div>
         <button
@@ -125,7 +126,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ selectedProduct, setSe
             isSubmitting ? 'bg-slate-400 cursor-not-allowed' : 'bg-accent hover:bg-orange-600'
           }`}
         >
-          {isSubmitting ? 'Надсилання...' : 'Надіслати запит'}
+          {isSubmitting ? contactFormResources.buttonSubmitting : contactFormResources.buttonSubmit}
         </button>
       </form>
     </section>

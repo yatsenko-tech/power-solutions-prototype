@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 const Datenschutz: React.FC = () => (
   <div className="container mx-auto p-8 bg-white shadow-lg rounded-lg mt-12 max-w-3xl">
