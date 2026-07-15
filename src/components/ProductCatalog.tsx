@@ -1,4 +1,5 @@
 import React from 'react';
+import { Zap, BatteryCharging, Info } from 'lucide-react';
 import productsData from '../data/products.json';
 
 export interface Product {
@@ -22,32 +23,53 @@ interface ProductCatalogProps {
 }
 
 const ProductCard: React.FC<{ product: Product; onContact: (product: Product) => void }> = ({ product, onContact }) => (
-  <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col">
+  <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col hover:shadow-xl transition-shadow duration-300">
     <img src={product.image} alt={product.name} className="w-full h-48 object-cover" />
     <div className="p-6 flex flex-col flex-grow">
       <h3 className="text-xl font-semibold text-primary mb-2">{product.name}</h3>
       <p className="text-sm text-slate-600 mb-4">{product.categoryLabel}</p>
-      <p className="text-2xl font-bold text-accent mb-4">€{product.price}</p>
-      <p className="text-slate-700 mb-4 flex-grow">{product.description}</p>
+      <p className="text-3xl font-bold text-blue-600 mb-4">€{product.price}</p>
+      <p className="text-slate-500 leading-relaxed mb-4 flex-grow">{product.description}</p>
       <div className="mb-4">
-        <h4 className="font-semibold mb-2">Technische Daten:</h4>
-        <ul className="text-sm text-slate-600 space-y-1">
+        <h4 className="font-semibold mb-2 flex items-center">
+          <Zap className="w-5 h-5 text-primary mr-2" />
+          Technische Daten:
+        </h4>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-slate-600">
           {Object.entries(product.specs).map(([key, value]) => (
-            <li key={key}><strong>{key}:</strong> {value}</li>
+            <div key={key} className="flex flex-col">
+              {key.toLowerCase().includes("batterie") || key.toLowerCase().includes("akku") || key.toLowerCase().includes("ladung") ? (
+                <div className="flex items-center">
+                  <BatteryCharging className="w-4 h-4 text-primary mr-2" />
+                  <strong className="font-semibold">{key}:</strong>
+                </div>
+              ) : (
+                <strong className="font-semibold">{key}:</strong>
+              )}
+              <span>{value}</span>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
       <div className="mb-6">
-        <h4 className="font-semibold mb-2">Besondere Merkmale:</h4>
-        <ul className="text-sm text-slate-600 list-disc list-inside space-y-1">
+        <h4 className="font-semibold mb-2 flex items-center">
+          <Info className="w-5 h-5 text-primary mr-2" />
+          Besondere Merkmale:
+        </h4>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-slate-600">
           {product.features.map((feature, index) => (
-            <li key={index}>{feature}</li>
+            <div key={index} className="flex items-center">
+              <svg className="w-4 h-4 text-primary mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+              </svg>
+              <span>{feature}</span>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
       <button
         onClick={() => onContact(product)}
-        className={`w-full py-3 px-6 rounded-lg text-white font-semibold transition duration-300
+        className={`w-full py-4 px-6 rounded-lg text-white text-lg font-bold shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg
           ${product.inStock ? 'bg-primary hover:bg-primary-dark' : 'bg-slate-400 cursor-not-allowed'}`}
         disabled={!product.inStock}
       >
